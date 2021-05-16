@@ -1,50 +1,58 @@
-import React, { useState, useEffect } from 'react';
-import Editor from './Editor'
+import React, { useState, useEffect } from "react";
+import Editor from "./Editor";
 import useLocalStorage from '../hooks/useLocalStorage'
+import Navigation from './Navigation'
+import Footer from './Footer'
+
 
 function App() {
-  const [html, setHtml] = useLocalStorage('html', '')
-  const [css, setCss] = useLocalStorage('css', '')
-  const [js, setJs] = useLocalStorage('js', '')
-  const [srcDoc, setSrcDoc] = useState('')
+  const [html, setHtml] = useState("");
+  const [css, setcss] = useState("");
+  const [js, setjs] = useState("");
+  const [srcDoc, setSrcDoc]=useState("")
 
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      setSrcDoc(`
-        <html>
-          <body>${html}</body>
-          <style>${css}</style>
-          <script>${js}</script>
-        </html>
-      `)
-    }, 250)
-
-    return () => clearTimeout(timeout)
-  }, [html, css, js])
+  useEffect(()=>{
+    const timeout = setTimeout(()=>{
+       setSrcDoc ( `
+      <html>
+         <body>${html}</body>
+         <style>${css}</style>
+         <script>${js}</script>
+       </html>
+       `)
+    },250)
+    return()=> clearTimeout(timeout)
+  }, [html,css,js])
+  
 
   return (
-    <>
+  <div className="container">
+    <Navigation />
+    <div className="main">
       <div className="pane top-pane">
         <Editor
           language="xml"
           displayName="HTML"
           value={html}
+          className="html"
           onChange={setHtml}
         />
         <Editor
           language="css"
           displayName="CSS"
           value={css}
-          onChange={setCss}
+          onChange={setcss}
         />
+
         <Editor
           language="javascript"
-          displayName="JS"
+          displayName="JavaScript"
           value={js}
-          onChange={setJs}
+          onChange={setjs}
         />
       </div>
-      <div className="pane">
+
+      <div className="output">
         <iframe
           srcDoc={srcDoc}
           title="output"
@@ -53,9 +61,13 @@ function App() {
           width="100%"
           height="100%"
         />
+        </div>
+
       </div>
-    </>
-  )
+      <Footer />
+    </div>
+    
+  );
 }
 
 export default App;
